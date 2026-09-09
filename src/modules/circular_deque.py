@@ -4,7 +4,12 @@ class DequeOperationError(Exception):
 
 class CircularDeque:
     def __init__(self, n: int, push_force: bool):
-        pass
+        self.n = n
+        self.push_force = push_force
+        self.deque = [0] * n
+        self.begin = 0 # указатель на первый элемент в деке
+        self.end = 0   # указатель на последний элемент в деке
+        self.size_of_deque = 0
 
     def push_front(self, x: int):
         pass
@@ -19,19 +24,19 @@ class CircularDeque:
         pass
 
     def front(self) -> int:
-        pass
+        return self.deque[self.begin]
 
     def back(self) -> int:
-        pass
+        return self.deque[self.end]
 
     def size(self) -> int:
-        pass
+        return self.size_of_deque
 
     def empty(self) -> bool:
-        pass
+        return self.size_of_deque == 0
 
     def full(self):
-        pass
+        return self.size_of_deque == self.n
 
     def resize(self, new_cap: int):
         pass
