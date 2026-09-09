@@ -1,3 +1,7 @@
+# Класс ошибок операций над декой
+class DequeOperationError(Exception):
+    pass
+
 class CircularDeque:
     def __init__(self, n: int, push_force: bool):
         pass
