@@ -1,77 +1,93 @@
-# Класс ошибок операций над декой
-class DequeOperationError(Exception):
-    pass
-
 class CircularDeque:
     def __init__(self, n: int, push_force: bool):
-        self.n = n
-        self.push_force = push_force
+        self.__cap = n
+        self.__push_force = push_force
+        self.__head = 0 # индекс первого элемента в деке
+        self.__tail = 0 # индекс последнего элемента в деке
+        self.__size = 0  # размер деки
         self.items = [None] * n
-        self.head = 0 # индекс первого элемента в деке
-        self.tail = 0 # индекс последнего элемента в деке
-        self.cap = 0  # размер деки
 
     def push_front(self, x: int):
-        if self.push_force == False and self.full():
-            raise DequeOperationError("Кольцевая дека заполнена!")
+        if self.__push_force == False and self.full():
+            raise OverflowError("Deque is full")
 
-        self.head = (self.head - 1 + self.n) % self.n
-        if self.tail == self.head:
-            self.tail = (self.tail - 1 + self.n) % self.n
+        self.__head = (self.__head - 1 + self.__cap) % self.__cap
+        if self.__tail == self.__head or self.size() == 0:
+            self.__tail = (self.__tail - 1 + self.__cap) % self.__cap
 
-        if self.items[self.head] is None:
-            self.cap += 1
-        self.items[self.head] = x
+        if self.items[self.__head] is None:
+            self.__size += 1
+        self.items[self.__head] = x
 
     def push_back(self, x: int):
-        if self.push_force == False and self.full():
-            raise DequeOperationError("Кольцевая дека заполнена!")
+        if self.__push_force == False and self.full():
+            raise OverflowError("Deque is full")
 
-        if self.cap != 0:
-            self.tail = (self.tail + 1) % self.n
-            if self.tail == self.head:
-                self.head = (self.head + 1) % self.n
+        if self.size() != 0:
+            self.__tail = (self.__tail + 1) % self.__cap
+            if self.__tail == self.__head:
+                self.__head = (self.__head + 1) % self.__cap
 
-        if self.items[self.tail] is None:
-            self.cap += 1
-        self.items[self.tail] = x
+        if self.items[self.__tail] is None:
+            self.__size += 1
+        self.items[self.__tail] = x
 
     def pop_front(self) -> int:
         if self.empty():
-            raise DequeOperationError("Кольцевая дека пуста")
-        result = self.items[self.head]
-        self.items[self.head] = None
-        self.head = (self.head + 1) % self.n
-        self.cap -= 1
+            raise IndexError("Deque is empty")
+        result = self.items[self.__head]
+        self.items[self.__head] = None
+        self.__head = (self.__head + 1) % self.__cap
+        self.__size -= 1
+        if self.empty():
+            self.__head = 0
+            self.__tail = 0
         return result
 
     def pop_back(self) -> int:
         if self.empty():
-            raise DequeOperationError("Кольцевая дека пуста")
-        result = self.items[self.tail]
-        self.items[self.tail] = None
-        self.tail = (self.tail - 1 + self.n) % self.n
-        self.cap -= 1
+            raise IndexError("Deque is empty")
+        result = self.items[self.__tail]
+        self.items[self.__tail] = None
+        self.__tail = (self.__tail - 1 + self.__cap) % self.__cap
+        self.__size -= 1
+        if self.empty():
+            self.__head = 0
+            self.__tail = 0
         return result
 
     def front(self) -> int:
         if self.empty():
-            raise DequeOperationError("Кольцевая дека пуста!")
-        return self.items[self.head]
+            raise IndexError("Deque is empty")
+        return self.items[self.__head]
 
     def back(self) -> int:
         if self.empty():
-            raise DequeOperationError("Кольцевая дека пуста!")
-        return self.items[self.tail]
+            raise IndexError("Deque is empty")
+        return self.items[self.__tail]
 
     def size(self) -> int:
-        return self.cap
+        return self.__size
 
     def empty(self) -> bool:
-        return self.cap == 0
+        return self.__size == 0
 
     def full(self):
-        return self.cap == self.n
+        return self.__size == self.__cap
 
     def resize(self, new_cap: int):
-        pass
+        new_items = [None] * new_cap
+        for i in range(new_cap):
+            new_items[i] = self.items[self.__head]
+            if self.__head == self.__tail:
+                break
+            self.__head = (self.__head + 1) % self.__cap
+
+        self.items = new_items
+        self.__cap = new_cap
+        if (self.size() > new_cap):
+            self.__size = new_cap
+            self.__tail = new_cap - 1
+        else:
+            self.__tail = self.__head
+        self.__head = 0
