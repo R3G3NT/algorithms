@@ -4,7 +4,7 @@ class CircularDeque:
         self.__push_force = push_force
         self.__head = 0 # индекс первого элемента в деке
         self.__tail = 0 # индекс последнего элемента в деке
-        self.__size = 0  # размер деки
+        self.__size = 0 # размер деки
         self.items = [None] * n
 
     def push_front(self, x: int):
@@ -77,17 +77,16 @@ class CircularDeque:
 
     def resize(self, new_cap: int):
         new_items = [None] * new_cap
+        new_size = 0
         for i in range(new_cap):
             new_items[i] = self.items[self.__head]
+            new_size += 1
             if self.__head == self.__tail:
                 break
             self.__head = (self.__head + 1) % self.__cap
 
         self.items = new_items
         self.__cap = new_cap
-        if (self.size() > new_cap):
-            self.__size = new_cap
-            self.__tail = new_cap - 1
-        else:
-            self.__tail = self.__head
+        self.__size = new_size
         self.__head = 0
+        self.__tail = new_size - 1
