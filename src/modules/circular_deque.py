@@ -4,7 +4,7 @@ class CircularDeque:
         self.__push_force = push_force
         self.__head = 0 # индекс первого элемента в деке
         self.__tail = 0 # индекс последнего элемента в деке
-        self.__size = 0 # размер деки
+        self.__size = 0 # счётчик количества элементов
         self.items = [None] * n
 
     def push_front(self, x: int):
@@ -23,10 +23,9 @@ class CircularDeque:
         if self.__push_force == False and self.full():
             raise OverflowError("Deque is full")
 
-        if self.size() != 0:
-            self.__tail = (self.__tail + 1) % self.__cap
-            if self.__tail == self.__head:
-                self.__head = (self.__head + 1) % self.__cap
+        self.__tail = (self.__tail + 1) % self.__cap
+        if self.__tail == self.__head or self.size() == 0:
+            self.__head = (self.__head + 1) % self.__cap
 
         if self.items[self.__tail] is None:
             self.__size += 1
@@ -35,10 +34,12 @@ class CircularDeque:
     def pop_front(self) -> int:
         if self.empty():
             raise IndexError("Deque is empty")
+        
         result = self.items[self.__head]
         self.items[self.__head] = None
         self.__head = (self.__head + 1) % self.__cap
         self.__size -= 1
+
         if self.empty():
             self.__head = 0
             self.__tail = 0
@@ -47,10 +48,12 @@ class CircularDeque:
     def pop_back(self) -> int:
         if self.empty():
             raise IndexError("Deque is empty")
+        
         result = self.items[self.__tail]
         self.items[self.__tail] = None
         self.__tail = (self.__tail - 1 + self.__cap) % self.__cap
         self.__size -= 1
+        
         if self.empty():
             self.__head = 0
             self.__tail = 0
