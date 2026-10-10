@@ -23,9 +23,10 @@ class CircularDeque:
         if self.__push_force == False and self.full():
             raise OverflowError("Deque is full")
 
-        self.__tail = (self.__tail + 1) % self.__cap
-        if self.__tail == self.__head or self.size() == 0:
-            self.__head = (self.__head + 1) % self.__cap
+        if self.size() != 0:
+            self.__tail = (self.__tail + 1) % self.__cap
+            if self.__tail == self.__head:
+                self.__head = (self.__head + 1) % self.__cap
 
         if self.items[self.__tail] is None:
             self.__size += 1
