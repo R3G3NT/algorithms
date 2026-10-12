@@ -128,3 +128,55 @@ def test_resize_shrink():
     assert dq.pop_front() == 10
     assert dq.pop_back() == 20
     assert dq.empty() is True
+
+def test_invalid_capacity():
+    """Проверка генерации ошибок при некорректной емкости в __init__ и resize."""
+    with pytest.raises(ValueError):
+        CircularDeque(0, push_force=False)
+
+    with pytest.raises(ValueError):
+        CircularDeque(-5, push_force=False)
+
+    dq = CircularDeque(3, push_force=False)
+    with pytest.raises(ValueError):
+        dq.resize(0)
+
+def test_resize_on_empty_deque():
+    """Проверка исправления бага: resize пустой деки не создает фантомный элемент."""
+    dq = CircularDeque(3, push_force=False)
+
+    assert dq.size() == 0
+    assert dq.empty() is True
+
+    dq.resize(5)
+
+    assert dq.size() == 0
+    assert dq.empty() is True
+
+    with pytest.raises(IndexError):
+        dq.front()
+
+def test_mixed_operations_with_resize():
+    """Проверка смешанных операций с циклическим переходом индексов и последующим resize."""
+    dq = CircularDeque(3, push_force=True)
+
+    dq.push_back(1)  # [1, None, None], head = 0, tail = 0
+    dq.push_back(2)  # [1, 2, None], head = 0, tail = 1
+    dq.push_back(3)  # [1, 2, 3], head = 0, tail = 2
+    dq.push_front(0) # [1, 2, 0], head = 2, tail = 1
+    dq.push_back(4)  # [1, 2, 4], head = 0, tail = 2
+
+    assert dq.front() == 1
+    assert dq.back() == 4
+    assert dq.size() == 3
+
+    dq.resize(5) # [1, 2, 4, None, None], head = 0, tail = 2
+
+    assert dq.front() == 1
+    assert dq.back() == 4
+    assert dq.size() == 3
+
+    dq.push_front(5) # [1, 2, 4, None, 5], head = 4, tail = 2
+
+    assert dq.front() == 5
+    assert dq.size() == 4

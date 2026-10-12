@@ -1,5 +1,7 @@
 class CircularDeque:
     def __init__(self, n: int, push_force: bool):
+        if n <= 0:
+            raise ValueError("Deque capacity must be greater than 0")
         self.cap = n
         self.push_force = push_force
         self.head = 0 # индекс первого элемента в деке
@@ -35,7 +37,7 @@ class CircularDeque:
     def pop_front(self) -> int:
         if self.empty():
             raise IndexError("Deque is empty")
-        
+
         result = self.items[self.head]
         self.items[self.head] = None
         self.head = (self.head + 1) % self.cap
@@ -49,12 +51,12 @@ class CircularDeque:
     def pop_back(self) -> int:
         if self.empty():
             raise IndexError("Deque is empty")
-        
+
         result = self.items[self.tail]
         self.items[self.tail] = None
         self.tail = (self.tail - 1 + self.cap) % self.cap
         self.item_count -= 1
-        
+
         if self.empty():
             self.head = 0
             self.tail = 0
@@ -80,6 +82,17 @@ class CircularDeque:
         return self.item_count == self.cap
 
     def resize(self, new_cap: int):
+        if new_cap <= 0:
+            raise ValueError("Deque capacity must be greater than 0")
+
+        if self.empty():
+            self.items = [None] * new_cap
+            self.cap = new_cap
+            self.head = 0
+            self.tail = 0
+            self.item_count = 0
+            return
+
         new_items = [None] * new_cap
         new_size = 0
         for i in range(new_cap):

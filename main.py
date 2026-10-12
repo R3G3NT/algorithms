@@ -1,7 +1,9 @@
 from modules.circular_deque import CircularDeque
 
-def main():
-    return
+dq = CircularDeque(3, push_force=False)
 
-if __name__ == "__main__":
-    main()
+print("до resize:", dq.size(), dq.empty())
+
+dq.resize(5)
+
+print("после resize:", dq.size(), dq.empty())
