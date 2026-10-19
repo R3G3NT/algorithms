@@ -50,7 +50,7 @@ def cut_runs(arr: list, minrun: int) -> list:
     return runs
 
 
-def gallop_search(run: list, start: int, target: int) -> int:
+def gallop_search(run: list, start: int, take_equal: bool, target: int) -> int:
     """Бинарный поиск с галопом."""
     size = len(run)
     i, j, step = start, start + 1, 1
@@ -78,14 +78,14 @@ def merge(left: list, right: list, min_gallop: int) -> tuple:
     while l < len(left) and r < len(right):
         if win_left >= min_gallop:
             gallops_count += 1
-            k = gallop_search(left, l, right[r])
+            k = gallop_search(left, l, True, right[r])
             res.extend(left[l:k])
             l = k
             win_left = 0
 
         elif win_right >= min_gallop:
             gallops_count += 1
-            k = gallop_search(right, r, left[l])
+            k = gallop_search(right, r, True, left[l])
             res.extend(right[r:k])
             r = k
             win_right = 0
