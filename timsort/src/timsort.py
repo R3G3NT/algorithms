@@ -3,7 +3,7 @@ MIN_GALLOP = 3
 
 
 def get_minrun(n: int, minrun_limit: int=MINRUN_LIMIT) -> int:
-    """Получает minrun."""
+    """Вычисляет minrun."""
     r = 0
     while n >= minrun_limit:
         r |= n & 1
@@ -50,7 +50,7 @@ def cut_runs(arr: list, minrun: int) -> list:
     return runs
 
 
-def gallop_search(run: list, start: int, take_equal: bool, target: int) -> int:
+def gallop_search(run: list, start: int, target: int) -> int:
     """Бинарный поиск с галопом."""
     size = len(run)
     i, j, step = start, start + 1, 1
@@ -78,14 +78,14 @@ def merge(left: list, right: list, min_gallop: int) -> tuple:
     while l < len(left) and r < len(right):
         if win_left >= min_gallop:
             gallops_count += 1
-            k = gallop_search(left, l, True, right[r])
+            k = gallop_search(left, l, right[r])
             res.extend(left[l:k])
             l = k
             win_left = 0
 
         elif win_right >= min_gallop:
             gallops_count += 1
-            k = gallop_search(right, r, True, left[l])
+            k = gallop_search(right, r, left[l])
             res.extend(right[r:k])
             r = k
             win_right = 0
