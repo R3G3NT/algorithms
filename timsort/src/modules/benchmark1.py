@@ -17,7 +17,7 @@ def generate_data(size: int, case_type: str) -> list:
 
 
 def run_benchmarks():
-    sizes = [10, 1000, 100000]
+    sizes = [10, 500, 1000, 10_000, 50_000, 100_000]
     cases = ["sort", "chaotic", "reverse"]
     results = {case: [] for case in cases}
 
