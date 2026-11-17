@@ -167,13 +167,8 @@ def print_log(runs, log, result):
 
     print("Answer:", *result)
 
-
-def main():
+if __name__ == "__main__":
     n = int(input())
     arr = [int(i) for i in input().split()[:n]]
     runs, log, result = timsort(arr)
     print_log(runs, log, result)
-
-
-if __name__ == "__main__":
-    main()
